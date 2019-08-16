@@ -1,7 +1,33 @@
+
+const deck = document.querySelector(".deck");
+const cards = Array.from(deck.children);
+const restart = document.querySelector('.restart');
+
+restart.addEventListener('click', initiateCards);
+
+let open = [];
+
 /*
  * 创建一个包含所有卡片的数组
  */
-
+let icons = [
+    'diamond',
+    'paper-plane-o',
+    'anchor',
+    'bolt',
+    'cube',
+    'leaf',
+    'bicycle',
+    'bomb',
+    'diamond',
+    'paper-plane-o',
+    'anchor',
+    'bolt',
+    'cube',
+    'leaf',
+    'bicycle',
+    'bomb'
+];
 
 /*
  * 显示页面上的卡片
@@ -9,6 +35,15 @@
  *   - 循环遍历每张卡片，创建其 HTML
  *   - 将每张卡的 HTML 添加到页面
  */
+function initiateCards() {
+    icons = shuffle(icons);
+    cards.forEach(function(card, index) {
+        card.className = 'card';
+        card.children[0].className = '';
+        card.children[0].classList.add('fa', 'fa-' + icons[index]);
+        card.addEventListener('click', openCard);
+    })
+}
 
 // 洗牌函数来自于 http://stackoverflow.com/a/2450976
 function shuffle(array) {
@@ -36,3 +71,32 @@ function shuffle(array) {
  *    + 增加移动计数器并将其显示在页面上（将这个功能放在你从这个函数中调用的另一个函数中）
  *    + 如果所有卡都匹配，则显示带有最终分数的消息（将这个功能放在你从这个函数中调用的另一个函数中）
  */
+function openCard() {
+    this.classList.add('open');
+    this.classList.add('show');
+    open.push(this);
+    judge();
+}
+
+function closeCard(card) {
+    setTimeout(function() {
+    card.classList.remove('open');
+    card.classList.remove('show');
+    }, 500);
+}
+
+function judge() {
+    let length = open.length;
+    let open1 = open[0];
+    let open2 = open[1];
+    if (length === 2) {
+        if (open1.children[0].classList.toString() ===
+        open2.children[0].classList.toString()) {
+
+        } else {
+            closeCard(open1);
+            closeCard(open2);
+        }
+        open = [];
+    }
+}
