@@ -107,3 +107,7 @@ h1 {
     float: right;
     cursor: pointer;
 }
+
+.moves .timer {
+    margin: 0px 20px;
+}

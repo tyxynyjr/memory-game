@@ -6,6 +6,14 @@ const restart = document.querySelector('.restart');
 restart.addEventListener('click', initiateCards);
 
 let open = [];
+let matched = 0;
+let moves = 0;
+let stars = 3;
+let seconds = 0;
+let minutes = 0;
+let hours = 0;
+let timer = null;
+
 
 /*
  * 创建一个包含所有卡片的数组
@@ -28,6 +36,8 @@ let icons = [
     'bicycle',
     'bomb'
 ];
+
+window.onload = initiateCards();
 
 /*
  * 显示页面上的卡片
@@ -75,6 +85,12 @@ function openCard() {
     this.classList.add('open');
     this.classList.add('show');
     open.push(this);
+    if(moves == 0) {
+        timer = window.setInterval(timeit, 1000);
+    }
+    moves += 1;
+    document.querySelector(".moves").innerHTML = moves;
+    updateStars(moves);
     judge();
 }
 
@@ -85,6 +101,20 @@ function closeCard(card) {
     }, 500);
 }
 
+function updateStars(moves) {
+    if(moves <=16) {
+        stars = 3;
+    } else if (moves <= 20) {
+        stars = 2;
+        document.getElementById("star3").classList.remove('fa-star');
+        document.getElementById("star3").classList.add('fa-star-o');
+    } else {
+        stars = 1;
+        document.getElementById("star2").classList.remove('fa-star');
+        document.getElementById("star2").classList.add('fa-star-o');
+    }
+}
+
 function judge() {
     let length = open.length;
     let open1 = open[0];
@@ -92,11 +122,27 @@ function judge() {
     if (length === 2) {
         if (open1.children[0].classList.toString() ===
         open2.children[0].classList.toString()) {
-
+            open1.classList.add('open', 'match');
+            open2.classList.add('open', 'match');
+            matched += 1;
         } else {
             closeCard(open1);
             closeCard(open2);
         }
         open = [];
+    }
+}
+
+function timeit() {
+    //TODO: how to format the output???
+    document.querySelector('.timer').innerHTML = hours + ":" + minutes + ":" + seconds;
+    seconds++;
+    if(seconds == 60){
+        minutes++;
+        seconds = 0;
+    }
+    if(minutes == 60){
+        hours++;
+        minutes = 0;
     }
 }
