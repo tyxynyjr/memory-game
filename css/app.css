@@ -111,3 +111,7 @@ h1 {
 .moves .timer {
     margin: 0px 20px;
 }
+
+.modal-title {
+    text-transform: uppercase; 
+}

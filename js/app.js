@@ -1,9 +1,19 @@
 
-const deck = document.querySelector(".deck");
-const cards = Array.from(deck.children);
-const restart = document.querySelector('.restart');
+// e is shor for element
+const edeck = document.querySelector(".deck");
+const ecards = Array.from(edeck.children);
+const erestart = document.querySelector('.restart');
+const emoves = document.querySelector(".moves");
+const estar2 = document.getElementById("star2");
+const estar3 = document.getElementById("star3");
+const etimer = document.querySelector('.timer');
+const emodal = document.getElementById('winModal');
+const ecloseModal = document.getElementById('closeModal');
+const estarModal = document.getElementById('starModal');
+const emoveModal = document.getElementById('moveModal');
+const etimeModal = document.getElementById('timeModal');
 
-restart.addEventListener('click', initiateCards);
+erestart.addEventListener('click', resetGame);
 
 let open = [];
 let matched = 0;
@@ -47,7 +57,7 @@ window.onload = initiateCards();
  */
 function initiateCards() {
     icons = shuffle(icons);
-    cards.forEach(function(card, index) {
+    ecards.forEach(function(card, index) {
         card.className = 'card';
         card.children[0].className = '';
         card.children[0].classList.add('fa', 'fa-' + icons[index]);
@@ -70,6 +80,24 @@ function shuffle(array) {
     return array;
 }
 
+function resetGame() {
+    open = [];
+    matched = 0;
+    moves = 0;
+    stars = 3;
+    seconds = 0;
+    minutes = 0;
+    hours = 0;
+    emoves.innerHTML = add0(moves);
+    estar2.classList.remove('fa-star-o');
+    estar2.classList.add('fa-star');
+    estar3.classList.remove('fa-star-o');
+    estar3.classList.add('fa-star');
+    etimer.innerHTML = '00:00:00';
+    clearInterval(timer);
+    initiateCards();
+    console.log(timer)
+}
 
 /*
  * 设置一张卡片的事件监听器。 如果该卡片被点击：
@@ -85,11 +113,11 @@ function openCard() {
     this.classList.add('open');
     this.classList.add('show');
     open.push(this);
-    if(moves == 0) {
-        timer = window.setInterval(timeit, 1000);
+    if(moves === 0) {
+        timer = setInterval(timeit, 1000);
     }
     moves += 1;
-    document.querySelector(".moves").innerHTML = moves;
+    emoves.innerHTML = add0(moves);
     updateStars(moves);
     judge();
 }
@@ -104,14 +132,14 @@ function closeCard(card) {
 function updateStars(moves) {
     if(moves <=16) {
         stars = 3;
-    } else if (moves <= 20) {
+    } else if (moves <= 24) {
         stars = 2;
-        document.getElementById("star3").classList.remove('fa-star');
-        document.getElementById("star3").classList.add('fa-star-o');
+        estar3.classList.remove('fa-star');
+        estar3.classList.add('fa-star-o');
     } else {
         stars = 1;
-        document.getElementById("star2").classList.remove('fa-star');
-        document.getElementById("star2").classList.add('fa-star-o');
+        estar2.classList.remove('fa-star');
+        estar2.classList.add('fa-star-o');
     }
 }
 
@@ -125,6 +153,9 @@ function judge() {
             open1.classList.add('open', 'match');
             open2.classList.add('open', 'match');
             matched += 1;
+            if(matched === 8) {
+                uwin();
+            }
         } else {
             closeCard(open1);
             closeCard(open2);
@@ -133,9 +164,20 @@ function judge() {
     }
 }
 
+function uwin() {
+    clearInterval(timer);
+    // estarModal.append('<i class="fa fa-star"></i>' * stars);
+    emoveModal.innerHTML = add0(moves);
+    etimeModal.innerHTML = etimer.innerHTML;
+    // window.alert("You won!")
+    emodal.style.display = 'block';
+    ecloseModal.addEventListener('click', function() {
+        emodal.style.display = 'none';
+    })
+}
+
 function timeit() {
-    //TODO: how to format the output???
-    document.querySelector('.timer').innerHTML = hours + ":" + minutes + ":" + seconds;
+    etimer.innerHTML = add0(hours) + ":" + add0(minutes) + ":" + add0(seconds);
     seconds++;
     if(seconds == 60){
         minutes++;
@@ -144,5 +186,13 @@ function timeit() {
     if(minutes == 60){
         hours++;
         minutes = 0;
+    }
+}
+
+function add0(value) {
+    if(value <= 9) {
+        return "0" + value;
+    } else {
+        return value;
     }
 }
