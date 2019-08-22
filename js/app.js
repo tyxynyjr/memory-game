@@ -12,8 +12,10 @@ const ecloseModal = document.getElementById('closeModal');
 const estarModal = document.getElementById('starModal');
 const emoveModal = document.getElementById('moveModal');
 const etimeModal = document.getElementById('timeModal');
+const erestartModal = document.getElementById('restartModal');
 
 erestart.addEventListener('click', resetGame);
+erestartModal.addEventListener('click', resetGame);
 
 let open = [];
 let matched = 0;
@@ -96,7 +98,8 @@ function resetGame() {
     etimer.innerHTML = '00:00:00';
     clearInterval(timer);
     initiateCards();
-    console.log(timer)
+    estarModal.innerHTML = '';
+    emodal.style.display = 'none';
 }
 
 /*
@@ -117,6 +120,7 @@ function openCard() {
         timer = setInterval(timeit, 1000);
     }
     moves += 1;
+    // this.removeEventListener('click', openCard);
     emoves.innerHTML = add0(moves);
     updateStars(moves);
     judge();
@@ -126,13 +130,14 @@ function closeCard(card) {
     setTimeout(function() {
     card.classList.remove('open');
     card.classList.remove('show');
+    card.addEventListener('click', openCard);
     }, 500);
 }
 
 function updateStars(moves) {
-    if(moves <=16) {
+    if(moves <= 20) {
         stars = 3;
-    } else if (moves <= 24) {
+    } else if (moves <= 28) {
         stars = 2;
         estar3.classList.remove('fa-star');
         estar3.classList.add('fa-star-o');
@@ -166,14 +171,21 @@ function judge() {
 
 function uwin() {
     clearInterval(timer);
-    // estarModal.append('<i class="fa fa-star"></i>' * stars);
+    for(let i=1; i<=stars; i++) {
+        estarModal.appendChild(createStarNode());
+    }
     emoveModal.innerHTML = add0(moves);
     etimeModal.innerHTML = etimer.innerHTML;
-    // window.alert("You won!")
     emodal.style.display = 'block';
     ecloseModal.addEventListener('click', function() {
         emodal.style.display = 'none';
     })
+}
+
+function createStarNode() {
+    let nStar = document.createElement('i');
+    nStar.classList.add('fa', 'fa-star');
+    return nStar;
 }
 
 function timeit() {
