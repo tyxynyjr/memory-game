@@ -1,4 +1,4 @@
-
+"use strict";
 // e is shor for element
 const edeck = document.querySelector(".deck");
 const ecards = Array.from(edeck.children);
@@ -113,14 +113,13 @@ function resetGame() {
  *    + 如果所有卡都匹配，则显示带有最终分数的消息（将这个功能放在你从这个函数中调用的另一个函数中）
  */
 function openCard() {
-    this.classList.add('open');
-    this.classList.add('show');
+    this.classList.add('open', 'show', 'animated', 'bounce');
     open.push(this);
     if(moves === 0) {
         timer = setInterval(timeit, 1000);
     }
     moves += 1;
-    // this.removeEventListener('click', openCard);
+    this.removeEventListener('click', openCard);
     emoves.innerHTML = add0(moves);
     updateStars(moves);
     judge();
@@ -128,8 +127,7 @@ function openCard() {
 
 function closeCard(card) {
     setTimeout(function() {
-    card.classList.remove('open');
-    card.classList.remove('show');
+    card.className = 'card';
     card.addEventListener('click', openCard);
     }, 500);
 }
@@ -155,8 +153,8 @@ function judge() {
     if (length === 2) {
         if (open1.children[0].classList.toString() ===
         open2.children[0].classList.toString()) {
-            open1.classList.add('open', 'match');
-            open2.classList.add('open', 'match');
+            open1.classList.add('open', 'match', 'animated', 'flash');
+            open2.classList.add('open', 'match', 'animated', 'flash');
             matched += 1;
             if(matched === 8) {
                 uwin();
